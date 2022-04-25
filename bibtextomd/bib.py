@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 # System imports
+import sys
 from datetime import datetime
 import argparse
 import warnings
@@ -431,3 +432,6 @@ def main(argv):
                 out_file.write(write_year)
 
             out_file.write(thesis(ref, faname))
+if __name__ == "__main__":
+    args = sys.argv[1:]
+    main(args)
