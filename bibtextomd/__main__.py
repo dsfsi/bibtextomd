@@ -1,5 +1,5 @@
 import sys
-from bibtextomd.bib import main as bib_main
+from bib import main as bib_main
 
 
 def main(args=None):

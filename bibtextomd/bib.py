@@ -163,16 +163,15 @@ def journal_article(ref, faname):
     if "pages" in ref:
         reference += 'pp. ' + ref["pages"] + ', '
 
-    month = ref["month"].title()
+    # month = ref["month"].title()
     year = ref["year"]
-    if month == "May":
-        month += ' '
-    else:
-        month += '. '
+    # if month == "May":
+    #     month += ' '
+    # else:
+    #     month += '. '
 
     reference += (
-        '{month}{year}{close}{{:.journal}}  \n'.format(
-            month=month, year=year, close=close_span,
+        '{year}{close}{{:.journal}}  \n'.format(year=year, close=close_span,
             )
         )
 
@@ -229,15 +228,14 @@ def in_proceedings(ref, faname):
     if "address" in ref:
         reference += ref["address"] + ', '
 
-    month = ref["month"].title()
-    if month == "May":
-        month += ' '
-    else:
-        month += '. '
+    # month = ref["month"].title()
+    # if month == "May":
+    #     month += ' '
+    # else:
+    #     month += '. '
 
     reference += (
-        '{month}{year}{close}{{:.journal}}  \n'.format(
-            month=month, year=year, close=close_span,
+        '{year}{close}{{:.journal}}  \n'.format( year=year, close=close_span,
             )
         )
 
@@ -325,7 +323,7 @@ def load_bibtex(bib_file_name):
     for t in entry_types:
         temp = sorted([val for key, val in refsdict.items()
                       if val["ENTRYTYPE"] == t], key=lambda l:
-                      datetime.strptime(l["month"], '%b').month, reverse=True)
+                      datetime.strptime(l["year"], '%Y').year, reverse=True)
         sort_dict[t] = sorted(temp, key=lambda k: k["year"], reverse=True)
 
     return sort_dict
@@ -411,27 +409,27 @@ def main(argv):
 
         # Finally are the theses and dissertations. Same general logic
         # as for the other reference types.
-        pubyear = ''
-        for ref in sort_dict["phdthesis"]:
-            out_file.write("\nPh.D. Dissertation\n---\n\n")
-            year = ref["year"]
-            if year != pubyear:
-                pubyear = year
-                write_year = '{{:.year}}\n### {}\n'.format(year)
-                out_file.write(write_year)
+        # pubyear = ''
+        # for ref in sort_dict["phdthesis"]:
+        #     out_file.write("\nPh.D. Dissertation\n---\n\n")
+        #     year = ref["year"]
+        #     if year != pubyear:
+        #         pubyear = year
+        #         write_year = '{{:.year}}\n### {}\n'.format(year)
+        #         out_file.write(write_year)
 
-            out_file.write(thesis(ref, faname))
+        #     out_file.write(thesis(ref, faname))
 
-        pubyear = ''
-        for ref in sort_dict["mastersthesis"]:
-            out_file.write("\nMaster's Thesis\n---\n\n")
-            year = ref["year"]
-            if year != pubyear:
-                pubyear = year
-                write_year = '{{:.year}}\n### {}\n'.format(year)
-                out_file.write(write_year)
+        # pubyear = ''
+        # for ref in sort_dict["mastersthesis"]:
+        #     out_file.write("\nMaster's Thesis\n---\n\n")
+        #     year = ref["year"]
+        #     if year != pubyear:
+        #         pubyear = year
+        #         write_year = '{{:.year}}\n### {}\n'.format(year)
+        #         out_file.write(write_year)
 
-            out_file.write(thesis(ref, faname))
+        #     out_file.write(thesis(ref, faname))
 if __name__ == "__main__":
     args = sys.argv[1:]
     main(args)
