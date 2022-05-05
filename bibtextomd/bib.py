@@ -130,6 +130,8 @@ def journal_article(ref, faname):
     # the journal title to remove the '\' before '&' in
     # 'Energy & Fuels' because Mendeley inserts an extra '\'
     # into the BibTeX.
+
+    ## TODO - Extract url, preprint_url and keywords
     authors = reorder(ref["author"], faname)
     title = ref["title"]
     journal = ref["journal"]
@@ -203,6 +205,8 @@ def in_proceedings(ref, faname):
     year = ref["year"]
 
     # Start building the reference string.
+
+    ## TODO - Extract url, preprint_url and keywords
     reference = (
         '\n{{:.paper}}\n{open}{title}{close}{{:.papertitle}}  \n'
         '{open}{authors}{close}{{:.authors}}  \n'
@@ -379,6 +383,10 @@ def main(argv):
         # information for each reference type. Therefore, its easiest
         # to write out the logic for each loop instead of writing the
         # logic into a function and calling that.
+
+        ## TODO should be by year, not article or proceeding
+        ## Looping by year instead
+
         for ref in sort_dict["article"]:
             # Get the publication year. If the year of the current
             # reference is not equal to the year of the previous
@@ -392,7 +400,7 @@ def main(argv):
             out_file.write(journal_article(ref, faname))
 
         # Next are conference papers and posters.
-        out_file.write('\nConference Publications and Posters\n---\n')
+        # out_file.write('\nConference Publications and Posters\n---\n')
 
         # Same trick for the pubyear as for the journal articles.
         pubyear = ''
@@ -407,29 +415,6 @@ def main(argv):
 
             out_file.write(in_proceedings(ref, faname))
 
-        # Finally are the theses and dissertations. Same general logic
-        # as for the other reference types.
-        # pubyear = ''
-        # for ref in sort_dict["phdthesis"]:
-        #     out_file.write("\nPh.D. Dissertation\n---\n\n")
-        #     year = ref["year"]
-        #     if year != pubyear:
-        #         pubyear = year
-        #         write_year = '{{:.year}}\n### {}\n'.format(year)
-        #         out_file.write(write_year)
-
-        #     out_file.write(thesis(ref, faname))
-
-        # pubyear = ''
-        # for ref in sort_dict["mastersthesis"]:
-        #     out_file.write("\nMaster's Thesis\n---\n\n")
-        #     year = ref["year"]
-        #     if year != pubyear:
-        #         pubyear = year
-        #         write_year = '{{:.year}}\n### {}\n'.format(year)
-        #         out_file.write(write_year)
-
-        #     out_file.write(thesis(ref, faname))
 if __name__ == "__main__":
     args = sys.argv[1:]
     main(args)
