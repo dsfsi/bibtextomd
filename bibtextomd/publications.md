@@ -4,31 +4,22 @@ Journal Articles
 {:.year}
 ### 2022
 
-{:.paper}
-<span>Why is this an anomaly? Explaining anomalies using sequential explanations</span>{:.papertitle}  
-<span>T. Mokoena, T. Celik, and V. Marivate</span>{:.authors}  
-<span>_Pattern Recognition_, vol. 121, pp. 108227, 2022</span>{:.journal}  
+* T. Mokoena, T. Celik, and V. Marivate{:.authors}  
+*Why is this an anomaly? Explaining anomalies using sequential explanations{:.papertitle}*,**vol. 121, pp. 108227**, 2022{:.journal} [Keywords][[Paper URL]()], [[Preprint URL]()]
 
 {:.year}
 ### 2021
 
-{:.paper}
-<span>Training Cross-Lingual embeddings for Setswana and Sepedi</span>{:.papertitle}  
-<span>M. Makgatho, V. Marivate, T. Sefara, and V. Wagner</span>{:.authors}  
-<span>_arXiv preprint arXiv:2111.06230_, 2021</span>{:.journal}  
-
-Conference Publications and Posters
----
+* M. Makgatho, V. Marivate, T. Sefara, and V. Wagner{:.authors}  
+*Training Cross-Lingual embeddings for Setswana and Sepedi{:.papertitle}*,2021{:.journal} [Keywords][[Paper URL]()], [[Preprint URL]()]
 
 {:.year}
 ### 2021
 
-{:.paper}
-<span>Is it Fake? News Disinformation Detection on South African News Websites</span>{:.papertitle}  
-<span>H. de Wet and V. Marivate</span>{:.authors}  
-<span>1--6, 2021 IEEE AFRICON, IEEE, 2021</span>{:.journal}  
+* H. de Wet and V. Marivate{:.authors}  
+*Is it Fake? News Disinformation Detection on South African News Websites{:.papertitle}*  
+**1--6, 2021 IEEE AFRICON, IEEE**, 2021{:.journal}  [Keywords][[Paper URL]()], [[Preprint URL]()]
 
-{:.paper}
-<span>An empirical investigation into audio pipeline approaches for classifying bird species</span>{:.papertitle}  
-<span>D. Behr, C. wa Maina, and V. Marivate</span>{:.authors}  
-<span>1--6, 2021 IEEE AFRICON, IEEE, 2021</span>{:.journal}  
+* D. Behr, C. wa Maina, and V. Marivate{:.authors}  
+*An empirical investigation into audio pipeline approaches for classifying bird species{:.papertitle}*  
+**1--6, 2021 IEEE AFRICON, IEEE**, 2021{:.journal}  [Keywords][[Paper URL]()], [[Preprint URL]()]

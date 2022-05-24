@@ -73,7 +73,7 @@ def reorder(names, faname):
         # the first/middle names at the whitespace then strip out any
         # remaining whitespace and any periods (the periods will be
         # added in the proper place later).
-        firsts = [i.strip().strip('.') for i in namesplit[1].split()]
+        firsts = [i.strip().strip('.') for i in namesplit[1].split()] if len(namesplit) > 1 else ""
 
         # For the case of hyphenated first names, we need to split at
         # the hyphen as well. Possible bug: this only works if the
@@ -81,7 +81,7 @@ def reorder(names, faname):
         # of the first names with the names split at the hyphen. We'd
         # like to handle multiple hyphens or a hyphenated name with an
         # initial more intelligently.
-        if '-' in firsts[0]:
+        if firsts != "" and  '-' in firsts[0]:
             firsts = firsts[0].split('-')
 
         # Now that all the first name edge cases are sorted out, we
@@ -91,8 +91,9 @@ def reorder(names, faname):
         # the first element of each item and append a period, but no
         # space.
         initials = ''
-        for item in firsts:
-            initials += item[0] + '.'
+        if firsts != "":
+            for item in firsts:
+                initials += item[0] + '.'
 
         # Stick all of the parts of the name together in `tidynames`
         tidynames.append(initials + ' ' + last)
@@ -134,9 +135,9 @@ def journal_article(ref, faname):
     ## TODO - Extract url, preprint_url and keywords
     authors = reorder(ref["author"], faname)
     title = ref["title"]
-    journal = ref["journal"]
-    if '\&' in journal:
-        words = journal.strip().split('\&')
+    journal = ""
+    if 'journal' in ref and '\&' in ref['journal']:
+        words = ref["journal"].strip().split('\&')
         journal = words[0] + '&' + words[1]
 
     # Start building the string containing the formatted
@@ -146,10 +147,10 @@ def journal_article(ref, faname):
     # before the newline so that kramdown inserts an HTML <br>
     # there.
     reference = (
-        '\n{{:.paper}}\n{open}{title}{close}{{:.papertitle}}  \n'
-        '{open}{authors}{close}{{:.authors}}  \n'
-        '{open}{em}{journal}{em}, '.format(
-            open=open_span, close=close_span, title=title, authors=authors, em=em,
+        '\n* {open}{authors}{close}{{:.authors}}  \n'
+        '*{open}{title}{close}{{:.papertitle}}*'        
+        ','.format(
+            open='', close='', title=title, authors=authors, em='',
             journal=journal,
             )
         )
@@ -157,13 +158,13 @@ def journal_article(ref, faname):
     # Not all journal articles will have vol., no., and pp.
     # because some may be "In Press".
     if "volume" in ref:
-        reference += 'vol. ' + ref["volume"] + ', '
+        reference += '**vol. ' + ref["volume"] + ', '
 
     if "number" in ref:
         reference += 'no. ' + ref["number"] + ', '
 
     if "pages" in ref:
-        reference += 'pp. ' + ref["pages"] + ', '
+        reference += 'pp. ' + ref["pages"] + '**, '
 
     # month = ref["month"].title()
     year = ref["year"]
@@ -173,7 +174,7 @@ def journal_article(ref, faname):
     #     month += '. '
 
     reference += (
-        '{year}{close}{{:.journal}}  \n'.format(year=year, close=close_span,
+        '{year}{close}{{:.journal}} [Keywords][[Paper URL]()], [[Preprint URL]()]\n'.format(year=year, close='',
             )
         )
 
@@ -181,7 +182,7 @@ def journal_article(ref, faname):
         reference += (
             '{open}{strong}DOI:{strong} [{doi}]'
             '(https://dx.doi.org/{doi}){close}{{:.doi}}  \n'.format(
-                open=open_span, close=close_span, strong=strong,
+                open='', close='', strong=strong,
                 doi=ref["doi"],
                 )
             )
@@ -192,7 +193,7 @@ def journal_article(ref, faname):
     if "annote" in ref:
         reference += (
             '{open}{annote}{close}{{:.comment}}  \n'.format(
-                open=open_span, close=close_span,
+                open='', close='',
                 annote=ref["annote"].replace('\\', ''),
                 )
             )
@@ -208,10 +209,10 @@ def in_proceedings(ref, faname):
 
     ## TODO - Extract url, preprint_url and keywords
     reference = (
-        '\n{{:.paper}}\n{open}{title}{close}{{:.papertitle}}  \n'
-        '{open}{authors}{close}{{:.authors}}  \n'
+        '\n* {open}{authors}{close}{{:.authors}}  \n'
+        '*{open}{title}{close}{{:.papertitle}}*  \n'       
         '{open}'.format(
-            open=open_span, close=close_span, title=title, authors=authors,
+            open='', close='', title=title, authors=authors,
             )
         )
 
@@ -221,17 +222,16 @@ def in_proceedings(ref, faname):
     # reference will have this, so we check for it.
     if "pages" in ref:
         paperno = ref["pages"]
-        reference += paperno + ', '
+        reference += '**'+paperno + ', '
 
     # Insert the conference title, stored in the "booktitle"
     # field.
     conf = ref["booktitle"]
     reference += conf + ', '
     if "organization" in ref:
-        reference += ref["organization"] + ', '
+        reference += ref["organization"] 
     if "address" in ref:
-        reference += ref["address"] + ', '
-
+        reference += ref["address"] 
     # month = ref["month"].title()
     # if month == "May":
     #     month += ' '
@@ -239,7 +239,7 @@ def in_proceedings(ref, faname):
     #     month += '. '
 
     reference += (
-        '{year}{close}{{:.journal}}  \n'.format( year=year, close=close_span,
+        '**, {year}{close}{{:.journal}}  [Keywords][[Paper URL]()], [[Preprint URL]()]\n'.format( year=year, close='',
             )
         )
 
@@ -247,8 +247,8 @@ def in_proceedings(ref, faname):
         reference += (
             '{open}{strong}DOI:{strong} [{doi}]'
             '(https://dx.doi.org/{doi}){close}{{:.doi}}  \n'.format(
-                open=open_span, strong=strong, doi=ref["doi"],
-                close=close_span,
+                open='', strong=strong, doi=ref["doi"],
+                close='',
                 )
             )
 
@@ -258,8 +258,8 @@ def in_proceedings(ref, faname):
     if "annote" in ref:
         reference += (
             '{open}{annote}{close}{{:.comment}}  \n'.format(
-                open=open_span, annote=ref["annote"].replace('\\', ''),
-                close=close_span,
+                open='', annote=ref["annote"].replace('\\', ''),
+                close='',
                 )
             )
     return reference
@@ -271,29 +271,29 @@ def thesis(ref, faname):
     year = ref["year"]
 
     reference = (
-        '\n{{:.paper}}\n{open}{title}{close}{{:.papertitle}}  \n'
-        '{open}{authors}{close}{{:.authors}}  \n'
+        '\n* {open}{authors}{close}{{:.authors}}  \n'
+        '{open}{title}{close}{{:.papertitle}}  \n'       
         '{open}'.format(
-            open=open_span, close=close_span, title=title, authors=authors,
+            open='', close='', title=title, authors=authors,
             )
         )
     if "school" in ref:
-        reference += ref["school"] + ', '
+        reference += '**'+ref["school"]
     if "month" in ref:
         month = ref["month"].title()
         if month == "May":
             month += ' '
         else:
-            month += '. '
+            month += '.'
         reference += month
 
-    reference += year + close_span + '{:.journal}  \n'
+    reference +="**," +year + '' + '{:.journal}  [Keywords][[Paper URL]()], [[Preprint URL]()]\n'
 
     if "annote" in ref:
         reference += (
             '{open}{annote}{close}{{:.comment}}  \n'.format(
-                open=open_span, annote=ref["annote"].replace('\\', ''),
-                close=close_span,
+                open='', annote=ref["annote"].replace('\\', ''),
+                close='',
                 )
             )
     return reference
@@ -385,6 +385,7 @@ def main(argv):
         # logic into a function and calling that.
 
         ## TODO should be by year, not article or proceeding
+        ##Example output - O. Oladeji, C. Zhang, T. Moradi, D. Tarapore, A.C. Stokes, V. Marivate, M.D. Sengeh, E.O. Nsoesie, and  others. *Monitoring Information-Seeking Patterns and Obesity Prevalence in Africa With Internet Search Data: Observational Study*, **Journal/Conference name**, 2021. [Keywords][[Paper URL]()], [[Preprint URL]()]
         ## Looping by year instead
 
         for ref in sort_dict["article"]:
