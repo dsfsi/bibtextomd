@@ -132,13 +132,14 @@ def journal_article(ref, faname):
     # 'Energy & Fuels' because Mendeley inserts an extra '\'
     # into the BibTeX.
 
-    ## TODO - Extract url, preprint_url and keywords
     authors = reorder(ref["author"], faname)
     title = ref["title"]
     journal = ""
     if 'journal' in ref and '\&' in ref['journal']:
         words = ref["journal"].strip().split('\&')
         journal = words[0] + '&' + words[1]
+    elif 'journal' in ref:
+        journal = ref['journal']
 
     # Start building the string containing the formatted
     # reference. Each bit should be surrounded by a span. The
@@ -147,9 +148,9 @@ def journal_article(ref, faname):
     # before the newline so that kramdown inserts an HTML <br>
     # there.
     reference = (
-        '\n* {open}{authors}{close}{{:.authors}}  \n'
-        '*{open}{title}{close}{{:.papertitle}}*'        
-        ','.format(
+        '\n* {open}{authors}{close}. '
+        '**{open}{title}{close}**, '        
+        '*{open}{journal}{close}*, '.format(
             open='', close='', title=title, authors=authors, em='',
             journal=journal,
             )
@@ -157,46 +158,54 @@ def journal_article(ref, faname):
 
     # Not all journal articles will have vol., no., and pp.
     # because some may be "In Press".
-    if "volume" in ref:
-        reference += '**vol. ' + ref["volume"] + ', '
+    # if "volume" in ref:
+    #     reference += 'vol. ' + ref["volume"] + ', '
 
-    if "number" in ref:
-        reference += 'no. ' + ref["number"] + ', '
+    # if "number" in ref:
+    #     reference += 'no. ' + ref["number"] + ', '
 
-    if "pages" in ref:
-        reference += 'pp. ' + ref["pages"] + '**, '
+    # if "pages" in ref:
+    #     reference += 'pp. ' + ref["pages"] + ', '
 
     # month = ref["month"].title()
     year = ref["year"]
-    # if month == "May":
-    #     month += ' '
-    # else:
-    #     month += '. '
+
+    keywords = ref["keywords"]
+    keywords_temps = ''
+    for keyword in keywords.split(','):
+        keywords_temps += '[' + keyword + ']'
+    keywords = keywords_temps
+
 
     reference += (
-        '{year}{close}{{:.journal}} [Keywords][[Paper URL]()], [[Preprint URL]()]\n'.format(year=year, close='',
+        '{open}{year}{close}. {open}{keywords}{close} <> '.format( year=year, 
+        close='', open='', keywords=keywords
             )
         )
 
-    if "doi" in ref:
+    if "url" in ref:
         reference += (
-            '{open}{strong}DOI:{strong} [{doi}]'
-            '(https://dx.doi.org/{doi}){close}{{:.doi}}  \n'.format(
-                open='', close='', strong=strong,
-                doi=ref["doi"],
+            '{open}[[Paper URL]({url})]{close} '.format(
+                open='', url=ref['url'],
+                close='',
+                )
+            )
+    if "preprint_url" in ref:
+        reference += (
+            '{open}[[Preprint URL]({preprint_url})]{close} '.format(
+                open='', preprint_url=ref['preprint_url'],
+                close='',
                 )
             )
 
-    # Extra comments, such as links to files, should be stored
-    # as "Notes" for each reference in Mendeley. Mendeley will
-    # export this field with the tag "annote" in BibTeX.
-    if "annote" in ref:
+    if "dataset_url" in ref:
         reference += (
-            '{open}{annote}{close}{{:.comment}}  \n'.format(
-                open='', close='',
-                annote=ref["annote"].replace('\\', ''),
+            '{open}[[Dataset]({dataset_url})]{close} '.format(
+                open='', dataset_url=ref['dataset_url'],
+                close='',
                 )
             )
+
     return reference
 
 
@@ -206,98 +215,59 @@ def in_proceedings(ref, faname):
     year = ref["year"]
 
     # Start building the reference string.
-
-    ## TODO - Extract url, preprint_url and keywords
     reference = (
-        '\n* {open}{authors}{close}{{:.authors}}  \n'
-        '*{open}{title}{close}{{:.papertitle}}*  \n'       
+        '\n* {open}{authors}{close}. '
+        '**{open}{title}{close}**, '       
         '{open}'.format(
             open='', close='', title=title, authors=authors,
             )
         )
 
-    # Since Mendeley doesn't allow customization of BibTeX
-    # output, we hack the "pages" field to contain the paper
-    # number for the conference paper. Not all of this type of
-    # reference will have this, so we check for it.
-    if "pages" in ref:
-        paperno = ref["pages"]
-        reference += '**'+paperno + ', '
-
-    # Insert the conference title, stored in the "booktitle"
-    # field.
     conf = ref["booktitle"]
-    reference += conf + ', '
-    if "organization" in ref:
-        reference += ref["organization"] 
-    if "address" in ref:
-        reference += ref["address"] 
-    # month = ref["month"].title()
-    # if month == "May":
-    #     month += ' '
-    # else:
-    #     month += '. '
+    keywords = ref["keywords"]
+    keywords_temps = ''
+    for keyword in keywords.split(','):
+        keywords_temps += '[' + keyword + ']'
+    keywords = keywords_temps
 
     reference += (
-        '**, {year}{close}{{:.journal}}  [Keywords][[Paper URL]()], [[Preprint URL]()]\n'.format( year=year, close='',
+        '{open}*{conf}*{close}. {open}{year}{close}. {open}{keywords}{close} <> '.format( year=year, 
+        close='', open='',conf=conf,keywords=keywords
             )
         )
 
+    if "url" in ref:
+        reference += (
+            '{open}[[Paper URL]({url})]{close} '.format(
+                open='', url=ref['url'],
+                close='',
+                )
+            )
+    if "preprint_url" in ref:
+        reference += (
+            '{open}[[Preprint URL]({preprint_url})]{close} '.format(
+                open='', preprint_url=ref['preprint_url'],
+                close='',
+                )
+            )
+
+    if "dataset_url" in ref:
+        reference += (
+            '{open}[[Dataset]({dataset_url})]{close} '.format(
+                open='', dataset_url=ref['dataset_url'],
+                close='',
+                )
+            )
     if "doi" in ref:
         reference += (
             '{open}{strong}DOI:{strong} [{doi}]'
-            '(https://dx.doi.org/{doi}){close}{{:.doi}}  \n'.format(
-                open='', strong=strong, doi=ref["doi"],
-                close='',
+            '(https://dx.doi.org/{doi}){close} '.format(
+                open='', close='', strong=strong,
+                doi=ref["doi"],
                 )
             )
 
-    # Extra comments, such as links to files, should be stored
-    # as "Notes" for each reference in Mendeley. Mendeley will
-    # export this field with the tag "annote" in BibTeX.
-    if "annote" in ref:
-        reference += (
-            '{open}{annote}{close}{{:.comment}}  \n'.format(
-                open='', annote=ref["annote"].replace('\\', ''),
-                close='',
-                )
-            )
     return reference
-
-
-def thesis(ref, faname):
-    authors = reorder(ref["author"], faname)
-    title = ref["title"]
-    year = ref["year"]
-
-    reference = (
-        '\n* {open}{authors}{close}{{:.authors}}  \n'
-        '{open}{title}{close}{{:.papertitle}}  \n'       
-        '{open}'.format(
-            open='', close='', title=title, authors=authors,
-            )
-        )
-    if "school" in ref:
-        reference += '**'+ref["school"]
-    if "month" in ref:
-        month = ref["month"].title()
-        if month == "May":
-            month += ' '
-        else:
-            month += '.'
-        reference += month
-
-    reference +="**," +year + '' + '{:.journal}  [Keywords][[Paper URL]()], [[Preprint URL]()]\n'
-
-    if "annote" in ref:
-        reference += (
-            '{open}{annote}{close}{{:.comment}}  \n'.format(
-                open='', annote=ref["annote"].replace('\\', ''),
-                close='',
-                )
-            )
-    return reference
-
 
 def load_bibtex(bib_file_name):
     # Open and parse the BibTeX file in `bib_file_name` using
@@ -315,8 +285,8 @@ def load_bibtex(bib_file_name):
     # Dedupe the list.
     entry_types = []
     for k, ref in refsdict.items():
-        entry_types.append(ref["ENTRYTYPE"])
-    entry_types = set(entry_types)
+        entry_types.append(ref["year"])
+    entry_types = sorted(set(entry_types),reverse=True)
 
     # For each of the types of reference, we need to sort each by month
     # then year. We store the dictionary representing each reference in
@@ -326,9 +296,9 @@ def load_bibtex(bib_file_name):
     sort_dict = {}
     for t in entry_types:
         temp = sorted([val for key, val in refsdict.items()
-                      if val["ENTRYTYPE"] == t], key=lambda l:
+                      if val["year"] == t], key=lambda l:
                       datetime.strptime(l["year"], '%Y').year, reverse=True)
-        sort_dict[t] = sorted(temp, key=lambda k: k["year"], reverse=True)
+        sort_dict[t] = sorted(temp , key=lambda k: k["year"], reverse=True)
 
     return sort_dict
 
@@ -371,7 +341,7 @@ def main(argv):
               newline='') as out_file:
 
         # Start with journal articles.
-        out_file.write('Journal Articles\n---\n')
+        # out_file.write('Journal Articles\n---\n')
 
         # To get the year numbering correct, we have to set a dummy
         # value for pubyear (usage described below).
@@ -387,34 +357,36 @@ def main(argv):
         ## TODO should be by year, not article or proceeding
         ##Example output - O. Oladeji, C. Zhang, T. Moradi, D. Tarapore, A.C. Stokes, V. Marivate, M.D. Sengeh, E.O. Nsoesie, and  others. *Monitoring Information-Seeking Patterns and Obesity Prevalence in Africa With Internet Search Data: Observational Study*, **Journal/Conference name**, 2021. [Keywords][[Paper URL]()], [[Preprint URL]()]
         ## Looping by year instead
-
-        for ref in sort_dict["article"]:
-            # Get the publication year. If the year of the current
-            # reference is not equal to the year of the previous
-            # reference, we need to set `pubyear` equal to `year`.
-            year = ref["year"]
-            if year != pubyear:
-                pubyear = year
-                write_year = '\n{{:.year}}\n### {}\n'.format(year)
-                out_file.write(write_year)
-
-            out_file.write(journal_article(ref, faname))
+        for year_now in sort_dict.keys():
+            for ref in sort_dict[year_now]:
+                # Get the publication year. If the year of the current
+                # reference is not equal to the year of the previous
+                # reference, we need to set `pubyear` equal to `year`.
+                year = ref["year"]
+                if year != pubyear:
+                    pubyear = year
+                    write_year = '\n\n### {}\n'.format(year)
+                    out_file.write(write_year)
+                if ref["ENTRYTYPE"] == 'inproceedings':
+                    out_file.write(in_proceedings(ref, faname))
+                elif ref["ENTRYTYPE"] == 'article':
+                    out_file.write(journal_article(ref, faname))
 
         # Next are conference papers and posters.
         # out_file.write('\nConference Publications and Posters\n---\n')
 
-        # Same trick for the pubyear as for the journal articles.
-        pubyear = ''
+        # # Same trick for the pubyear as for the journal articles.
+        # pubyear = ''
 
-        # Loop through the references in the `inproceedings` type.
-        for ref in sort_dict["inproceedings"]:
-            year = ref["year"]
-            if year != pubyear:
-                pubyear = year
-                write_year = '\n{{:.year}}\n### {}\n'.format(year)
-                out_file.write(write_year)
+        # # Loop through the references in the `inproceedings` type.
+        # for ref in sort_dict["inproceedings"]:
+        #     year = ref["year"]
+        #     if year != pubyear:
+        #         pubyear = year
+        #         write_year = '\n\n### {}\n'.format(year)
+        #         out_file.write(write_year)
 
-            out_file.write(in_proceedings(ref, faname))
+        #     out_file.write(in_proceedings(ref, faname))
 
 if __name__ == "__main__":
     args = sys.argv[1:]
