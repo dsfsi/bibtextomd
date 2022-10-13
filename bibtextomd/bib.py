@@ -205,7 +205,14 @@ def journal_article(ref, faname):
                 close='',
                 )
             )
-
+    if "doi" in ref:
+        reference += (
+            '{open}{strong}DOI:{strong} [{doi}]'
+            '(https://dx.doi.org/{doi}){close} '.format(
+                open='', close='', strong=strong,
+                doi=ref["doi"],
+                )
+            )
     return reference
 
 
