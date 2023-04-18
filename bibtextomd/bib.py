@@ -205,6 +205,13 @@ def journal_article(ref, faname):
                 close='',
                 )
             )
+    if "software_url" in ref:
+        reference += (
+            '{open}[[Software/Library]({software_url})]{close} '.format(
+                open='', software_url=ref['software_url'],
+                close='',
+                )
+            )
     if "doi" in ref:
         reference += (
             '{open}{strong}DOI:{strong} [{doi}]'
@@ -262,6 +269,13 @@ def in_proceedings(ref, faname):
         reference += (
             '{open}[[Dataset]({dataset_url})]{close} '.format(
                 open='', dataset_url=ref['dataset_url'],
+                close='',
+                )
+            )
+    if "software_url" in ref:
+        reference += (
+            '{open}[[Software/Library]({software_url})]{close} '.format(
+                open='', software_url=ref['software_url'],
                 close='',
                 )
             )
