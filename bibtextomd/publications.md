@@ -2,6 +2,7 @@
 
 ### 2023
 
+* H.M. Combrink, V. Marivate, and B. Masikisiki. **Technology-Enhanced Learning, Data Sharing, and Machine Learning Challenges in South African Education**, *Education Sciences*, 2023. [SOC] <> [[Paper URL](https://www.mdpi.com/2227-7102/13/5/438)] **DOI:** [10.3390/educsci13050438](https://dx.doi.org/10.3390/educsci13050438) 
 * K.D. Dhole, V. Gangal, S. Gehrmann, A. Gupta, Z. Li, S. Mahamood, A. Mahendiran, S. Mille, A. Srivastava, S. Tan, and  others. **NL-Augmenter: A Framework for Task-Sensitive Natural Language Augmentation**, *Northern European Journal of Language Technology (NEJLT)*, 2023. [NLP] <> [[Paper URL](https://nejlt.ep.liu.se/article/view/4725)] [[Preprint URL](https://arxiv.org/abs/2112.02721)] [[Software/Library](https://github.com/GEM-benchmark/NL-Augmenter)] 
 *  Rendani Mbuvha,  David I. Adelani,  Tendani Mutavhatsindi,  Tshimangadzo Rakhuhu,  Aluwani Mauda,  Tshifhiwa Joshua Maumela,  Andisani Masindi,  Seani Rananga,  Vukosi Marivate, and  Tshilidzi Marwala. **MphayaNER: Named Entity Recognition for Tshivenda**, *arXiv preprint arXiv: Arxiv-2304.03952*, 2023. [NLP] <> [[Paper URL](https://arxiv.org/abs/2304.03952)] 
 * R. Lastrucci, I. Dzingirai, J. Rajab, A. Madodonga, M. Shingange, D. Njini, and V. Marivate. **Preparing the Vuk'uzenzele and ZA-gov-multilingual South African multilingual corpora**, *arXiv preprint arXiv:2303.03750*, 2023. [NLP] <> [[Paper URL](https://arxiv.org/abs/2303.03750)] [[Dataset](https://github.com/dsfsi/vukuzenzele-nlp)] 
