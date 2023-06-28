@@ -4,6 +4,7 @@ import sys
 from datetime import datetime
 import argparse
 import warnings
+from datetime import date
 
 # Package imports
 from bibtexparser.bparser import BibTexParser
@@ -378,6 +379,17 @@ def main(argv):
         ## TODO should be by year, not article or proceeding
         ##Example output - O. Oladeji, C. Zhang, T. Moradi, D. Tarapore, A.C. Stokes, V. Marivate, M.D. Sengeh, E.O. Nsoesie, and  others. *Monitoring Information-Seeking Patterns and Obesity Prevalence in Africa With Internet Search Data: Observational Study*, **Journal/Conference name**, 2021. [Keywords][[Paper URL]()], [[Preprint URL]()]
         ## Looping by year instead
+        out_file.write("---\n")
+        out_file.write("layout: page\n")
+        out_file.write("title: Data Science for Social Impact - Publications\n")
+        out_file.write("description: These are the DSFSI research group's publications/contributions with connected datasets and/or software.\n")
+        out_file.write("sitemap:\n")
+        out_file.write("    priority: 1.0\n")
+        out_file.write("    lastmod: {}\n".format(date.today()))
+        out_file.write("    changefreq: monthly\n")
+        out_file.write("---\n")
+        # out_file.write("<details>\n")
+        # out_file.write("<summary>Years (Dropdown):</summary>\n\n")
         for year_now in sort_dict.keys():
             for ref in sort_dict[year_now]:
                 # Get the publication year. If the year of the current
@@ -386,7 +398,19 @@ def main(argv):
                 year = ref["year"]
                 if year != pubyear:
                     pubyear = year
-                    write_year = '\n\n### {}\n'.format(year)
+                    write_year = '[{}](#{}) || '.format(year,year)
+                    out_file.write(write_year)
+        # out_file.write("</details>")
+        pubyear = ''
+        for year_now in sort_dict.keys():
+            for ref in sort_dict[year_now]:
+                # Get the publication year. If the year of the current
+                # reference is not equal to the year of the previous
+                # reference, we need to set `pubyear` equal to `year`.
+                year = ref["year"]
+                if year != pubyear:
+                    pubyear = year
+                    write_year = '\n\n## <a id="{}"></a> {}\n'.format(year,year)
                     out_file.write(write_year)
                 if ref["ENTRYTYPE"] == 'inproceedings':
                     out_file.write(in_proceedings(ref, faname))
