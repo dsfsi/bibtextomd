@@ -213,6 +213,13 @@ def journal_article(ref, faname):
                 close='',
                 )
             )
+    if "video_url" in ref:
+        reference += (
+            '{open}[[Video]({video_url})]{close} '.format(
+                open='',  video_url=ref['video_url'],
+                close='',
+                )
+            )
     if "doi" in ref:
         reference += (
             '{open}{strong}DOI:{strong} [{doi}]'
@@ -277,6 +284,13 @@ def in_proceedings(ref, faname):
         reference += (
             '{open}[[Software/Library]({software_url})]{close} '.format(
                 open='', software_url=ref['software_url'],
+                close='',
+                )
+            )
+    if "video_url" in ref:
+        reference += (
+            '{open}[[Video]({video_url})]{close} '.format(
+                open='', video_url=ref['video_url'],
                 close='',
                 )
             )
